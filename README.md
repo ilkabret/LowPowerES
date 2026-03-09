@@ -68,7 +68,7 @@ This enables **real-time gesture recognition directly on the embedded device**.
 
 ---
 
-Ilka BRETSCHNEIDER
-Romain NOBLET
+- Ilka BRETSCHNEIDER
+- Romain NOBLET
 
 **Università degli Studi di Trento**
