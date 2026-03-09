@@ -1,4 +1,4 @@
-🤖 Gesture Recognition Application Using Feature Extraction
+# Gesture Recognition Application Using Feature Extraction
 
 ## 🎯 Project Overview
 
