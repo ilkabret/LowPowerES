@@ -5,8 +5,6 @@ This project implements a **real-time gesture recognition system** using motion 
 
 The full pipeline includes **data collection**, **feature extraction**, **model training in Google Colab**, and **deployment of the trained model on Arduino for on-device inference**.
 
----
-
 ## ✋ Gesture Classes
 The system recognizes multiple gesture classes, for example:
 
@@ -17,8 +15,6 @@ The system recognizes multiple gesture classes, for example:
 - …  
 
 Additional gesture classes can be added by collecting more labeled data.
-
----
 
 ## ⚙️ Feature Extraction
 Features are extracted using **sliding windows** over the signal.
@@ -34,8 +30,6 @@ Features are extracted using **sliding windows** over the signal.
 
 These features are computed for the **accelerometer and gyroscope axes**.
 
----
-
 ## 🧠 Model Training (Google Colab)
 The training pipeline includes:
 
@@ -44,8 +38,6 @@ The training pipeline includes:
 - 📊 Model evaluation using accuracy and a confusion matrix  
 
 The trained model parameters (**weights and biases**) are exported for deployment on Arduino.
-
----
 
 ## 🔌 On-Device Inference (Arduino)
 The Arduino sketch performs:
@@ -58,8 +50,6 @@ The Arduino sketch performs:
 - 🖥️ Output of predicted gesture via the Serial monitor  
 
 This enables **real-time gesture recognition directly on the embedded device**.
-
----
 
 Ilka BRETSCHNEIDER <br>
 Romain NOBLET
