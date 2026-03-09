@@ -1,6 +1,6 @@
-# 🤖 Gesture Recognition Application Using Feature Extraction
+🤖 Gesture Recognition Application Using Feature Extraction
 
-# 🎯 Project Overview
+## 🎯 Project Overview
 
 This project implements a **real-time gesture recognition system** using motion sensor data from an **Arduino-compatible IMU** (accelerometer and/or gyroscope). The system uses feature extraction techniques such as **RMS** and **PSD** to classify multiple gesture types and performs **inference directly on the device**.
 
@@ -8,7 +8,7 @@ The full pipeline includes **data collection**, **feature extraction**, **model 
 
 ---
 
-# ✋ Gesture Classes
+## ✋ Gesture Classes
 
 The system recognizes multiple gesture classes, for example:
 
@@ -22,18 +22,18 @@ Additional gesture classes can be added by collecting more labeled data.
 
 ---
 
-# ⚙️ Feature Extraction
+## ⚙️ Feature Extraction
 
 Features are extracted using **sliding windows** over the signal.
 
-## 🕒 Time-Domain Features
+### 🕒 Time-Domain Features
 
 - 📊 Mean  
 - 📉 Standard Deviation  
 - 📈 RMS (Root Mean Square)  
 - 🔽 Minimum and 🔼 Maximum  
 
-## 🌊 Frequency-Domain Features
+### 🌊 Frequency-Domain Features
 
 - 📡 Power Spectral Density (PSD)
 
@@ -41,7 +41,7 @@ These features are computed for the **accelerometer and gyroscope axes**.
 
 ---
 
-# 🧠 Model Training (Google Colab)
+## 🧠 Model Training (Google Colab)
 
 The training pipeline includes:
 
@@ -53,7 +53,7 @@ The trained model parameters (**weights and biases**) are exported for deploymen
 
 ---
 
-# 🔌 On-Device Inference (Arduino)
+## 🔌 On-Device Inference (Arduino)
 
 The Arduino sketch performs:
 
