@@ -5,7 +5,7 @@ This project implements a **real-time gesture recognition system** using motion 
 
 The full pipeline includes **data collection**, **feature extraction**, **model training in Google Colab**, and **deployment of the trained model on Arduino for on-device inference**.
 
-<hr> 
+<br>
 
 > Ilka BRETSCHNEIDER <br> Romain NOBLET
 
