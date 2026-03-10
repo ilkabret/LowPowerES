@@ -20,8 +20,8 @@ The full pipeline includes **data collection**, **feature extraction**, **model 
 
 **Usage:** Open the Serial Monitor to see live gesture predictions.
 
-<br>
+---
 
-> Ilka BRETSCHNEIDER <br> Romain NOBLET
+Ilka BRETSCHNEIDER <br> Romain NOBLET
 
 *Università degli Studi di Trento - 2026*
