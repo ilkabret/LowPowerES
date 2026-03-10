@@ -7,7 +7,6 @@ The full pipeline includes **data collection**, **feature extraction**, **model 
 
 ---
 
-Ilka BRETSCHNEIDER <br>
-Romain NOBLET
+> Ilka BRETSCHNEIDER <br> Romain NOBLET
 
-*Università degli Studi di Trento*
+*Università degli Studi di Trento - 2026*
