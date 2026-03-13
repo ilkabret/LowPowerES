@@ -5,7 +5,7 @@
 #include <tensorflow/lite/micro/micro_interpreter.h>
 #include <tensorflow/lite/schema/schema_generated.h>
 
-#include "model_range.h"
+#include "model_heavy.h"
 
 const float accelerationThreshold = 2.5;
 const int numSamples = 119;
@@ -169,7 +169,7 @@ void setup() {
   Serial.println("System ready");
 
   // load TFLite model
-  tflModel = tflite::GetModel(model_range);
+  tflModel = tflite::GetModel(model_heavy);
 
   static tflite::MicroInterpreter static_interpreter(
     tflModel,
