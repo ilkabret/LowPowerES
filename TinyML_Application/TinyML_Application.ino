@@ -1,3 +1,10 @@
+/* -------- Assignment 1 --------
+Topic:  Gesture Recognition Application Using Feature Extraction
+Date:   15/03/2026
+Names:  Romain Mathis Noblet
+        Ilka Bretschneider (268664)
+*/
+
 #include "Arduino_BMI270_BMM150.h"
 
 #include <TensorFlowLite.h>
@@ -29,7 +36,7 @@ TfLiteTensor* tflInputTensor = nullptr;
 TfLiteTensor* tflOutputTensor = nullptr;
 
 // memory for TensorFlow
-constexpr int tensorArenaSize = 16 * 1024;
+constexpr int tensorArenaSize = 8 * 1024;
 byte tensorArena[tensorArenaSize] __attribute__((aligned(16)));
 
 const char* GESTURES[] = {
@@ -39,7 +46,8 @@ const char* GESTURES[] = {
   "circle"
 };
 
-#define NUM_GESTURES (sizeof(GESTURES) / sizeof(GESTURES[0]))
+// to obtain 4 elements in GESTURES[] divide size of array (16 bytes) by one element (4 byte)
+#define NUM_GESTURES (sizeof(GESTURES) / sizeof(GESTURES[0])) 
 
 // -------- Feature Functions --------
 
@@ -104,22 +112,17 @@ void computeFeatures(){
     features[idx++] = mx;
     features[idx++] = psd;
 
-    Serial.print("Mean: "); Serial.println(m);
-    Serial.print("Std: "); Serial.println(s);
-    Serial.print("RMS: "); Serial.println(r);
-    Serial.print("Min: "); Serial.println(mn);
-    Serial.print("Max: "); Serial.println(mx);
-    Serial.print("Mean PSD: "); Serial.println(psd);
+    // Serial.print("Mean: "); Serial.println(m);
+    // Serial.print("Std: "); Serial.println(s);
+    // Serial.print("RMS: "); Serial.println(r);
+    // Serial.print("Min: "); Serial.println(mn);
+    // Serial.print("Max: "); Serial.println(mx);
+    // Serial.print("Mean PSD: "); Serial.println(psd);
   }
 
   // normalize each feature independently
-  // features are laid out in blocks of 6 per signal
-  // but here we normalize each of the 36 features on its own min/max
-  // Since each feature is a single scalar, we normalize across the
-  // 6 signals for each feature type (mean, std, rms, min, max, range)
-
-  // reshape: for each feature position (0-5), collect values across 6 signals
-  for(int f = 0; f < 6; f++){  // f = feature type (mean, std, rms, min, max, range)
+  
+  for(int f = 0; f < 6; f++){  // f = feature type (mean, std, rms, min, max, psd)
 
     float minF = features[f];
     float maxF = features[f];
@@ -140,14 +143,6 @@ void computeFeatures(){
       features[idx] = (features[idx] - minF) / range;
     }
   }
-
-  // print normalized features
-  Serial.println("Features:");
-  for(int i = 0; i < NUM_FEATURES; i++){
-    Serial.print(i); Serial.print(": ");
-    Serial.println(features[i], 6);
-  }
-  Serial.println("---------------------");
 }
 
 // -------- Setup --------
@@ -163,39 +158,36 @@ void setup() {
   }
 
   Serial.print("Accelerometer sample rate = ");
-  Serial.println(IMU.accelerationSampleRate());
+  Serial.print(IMU.accelerationSampleRate());
+  Serial.println(" Hz");
 
   Serial.print("Gyroscope sample rate = ");
-  Serial.println(IMU.gyroscopeSampleRate());
+  Serial.print(IMU.gyroscopeSampleRate());
+  Serial.println(" Hz");
 
-  Serial.println("System ready");
+  Serial.println("System ready - do your move!");
 
-  // load TFLite model
+  // get the TFL representation of the model byte array
   tflModel = tflite::GetModel(model);
+  if (tflModel->version() != TFLITE_SCHEMA_VERSION) {
+    Serial.println("Model schema mismatch!");
+    while (1);
+  }
 
+  // Build an interpreter to run the model with.
   static tflite::MicroInterpreter static_interpreter(
-    tflModel,
-    tflOpsResolver,
-    tensorArena,
-    tensorArenaSize
-  );
-
+      tflModel, tflOpsResolver, tensorArena, tensorArenaSize);
   tflInterpreter = &static_interpreter;
 
-  // tflInterpreter->AllocateTensors();
+  // Allocate memory for the model's input and output tensors
   if (tflInterpreter->AllocateTensors() != kTfLiteOk) {
     Serial.println("AllocateTensors failed!");
     while(1);
 }
 
+  // Get pointers for the model's input and output tensors
   tflInputTensor = tflInterpreter->input(0);
   tflOutputTensor = tflInterpreter->output(0);
-
-  // sanity check tensor shapes
-  Serial.print("Input shape: ");
-  Serial.println(tflInputTensor->dims->data[1]);   // should print 36
-  Serial.print("Output shape: ");
-  Serial.println(tflOutputTensor->dims->data[1]);  // should print 4
 }
 
 // -------- Main Loop --------
@@ -204,7 +196,7 @@ void loop() {
 
   float aX, aY, aZ, gX, gY, gZ;
 
-  // wait for movement trigger
+  // wait for msignificant motion
   while(samplesRead == numSamples){
 
     if(IMU.accelerationAvailable()){
@@ -247,18 +239,31 @@ void loop() {
         for(int i=0;i<NUM_FEATURES;i++)
             tflInputTensor->data.f[i] = features[i];
 
-        // now you can safely run inference
+        // Run inferencing
         if(tflInterpreter->Invoke()!=kTfLiteOk){
             Serial.println("Invoke failed!");
             while(1);
         }
 
         // print model output
-        for(int i=0;i<NUM_GESTURES;i++){
+        int bestIndex = 0;
+        float bestValue = tflOutputTensor->data.f[0];
+
+        for (int i = 0; i < NUM_GESTURES; i++) {
             Serial.print(GESTURES[i]);
             Serial.print(": ");
-            Serial.println(tflOutputTensor->data.f[i],6);
+            Serial.println(tflOutputTensor->data.f[i], 6);
+
+            // find highest probability
+            if (tflOutputTensor->data.f[i] > bestValue) {
+                bestValue = tflOutputTensor->data.f[i];
+                bestIndex = i;
+            }
         }
+
+        // print prediction message
+        Serial.print("It is probably: ");
+        Serial.println(GESTURES[bestIndex]);
       }
     }
   }
