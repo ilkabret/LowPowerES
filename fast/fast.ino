@@ -5,7 +5,7 @@
 #include <tensorflow/lite/micro/micro_interpreter.h>
 #include <tensorflow/lite/schema/schema_generated.h>
 
-#include "model_heavy.h"
+#include "model.h"
 
 const float accelerationThreshold = 2.5;
 const int numSamples = 119;
@@ -76,8 +76,10 @@ float maxVal(float *x){
 
 float psdEnergy(float *x){
   float e=0;
-  for(int i=0;i<numSamples;i++) e+=x[i]*x[i];
-  return e;
+  for(int i=0;i<numSamples;i++) {
+    e+=x[i]*x[i];
+  }
+  return e / numSamples;
 }
 
 // -------- Feature Extraction --------
@@ -93,21 +95,21 @@ void computeFeatures(){
     float r   = rms(signals[i]);
     float mn  = minVal(signals[i]);
     float mx  = maxVal(signals[i]);
-    float rng = mx - mn;
+    float psd = psdEnergy(signals[i]);
 
     features[idx++] = m;
     features[idx++] = s;
     features[idx++] = r;
     features[idx++] = mn;
     features[idx++] = mx;
-    features[idx++] = rng;
+    features[idx++] = psd;
 
     Serial.print("Mean: "); Serial.println(m);
     Serial.print("Std: "); Serial.println(s);
     Serial.print("RMS: "); Serial.println(r);
     Serial.print("Min: "); Serial.println(mn);
     Serial.print("Max: "); Serial.println(mx);
-    Serial.print("Range: "); Serial.println(rng);
+    Serial.print("Mean PSD: "); Serial.println(psd);
   }
 
   // normalize each feature independently
@@ -169,7 +171,7 @@ void setup() {
   Serial.println("System ready");
 
   // load TFLite model
-  tflModel = tflite::GetModel(model_heavy);
+  tflModel = tflite::GetModel(model);
 
   static tflite::MicroInterpreter static_interpreter(
     tflModel,
