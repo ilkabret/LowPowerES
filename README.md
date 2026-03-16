@@ -16,7 +16,7 @@ The full pipeline includes **data collection**, **feature extraction**, **model 
 
 #### Feature extraction - 6 Features
 
-##### 1. Mean
+#### 1. Mean
 The mean represents the average value of the signal within the window.
 
 $$
@@ -28,7 +28,7 @@ Where:
 - $x_i$ = the i-th sample of the signal in the window
 - $N$ = number of samples in the window (119 in this implementation)
 
-##### 2. Standard Deviation
+#### 2. Standard Deviation
 Standard deviation measures how much the signal varies around the mean.
 
 $$
@@ -41,7 +41,7 @@ Where:
 - $\mu$ = mean value of the signal
 - $N$ = number of samples in the window
 
-##### 3. Root Mean Square
+#### 3. Root Mean Square
 RMS represents the overall magnitude of the signal.
 
 $$
@@ -53,7 +53,7 @@ Where:
 - $x_i$ = the i-th sample of the signal in the window
 - $N$ = number of samples in the window
 
-##### 4. Minimum Value
+#### 4. Minimum Value
 The minimum feature captures the lowest signal value within the window.
 
 $$
@@ -65,7 +65,7 @@ Where:
 - $x_1, x_2, ..., x_N$ = signal samples within the window
 - $N$ = number of samples in the window
 
-##### 5. Maximum Value
+#### 5. Maximum Value
 The maximum feature captures the largest signal value within the window.
 
 $$
@@ -77,7 +77,7 @@ Where:
 - $x_1, x_2, ..., x_N$ = signal samples within the window
 - $N$ = number of samples in the window
 
-##### 6. Signal Energy (Power Spectral Density Approximation)
+#### 6. Signal Energy (Power Spectral Density Approximation)
 This feature estimates the energy (power) of the signal within the window.
 
 $$
@@ -99,9 +99,9 @@ During execution, the Arduino collects data, extracts the same 36 normalized fea
 
 ## ⚙️ Intructions
 
-- All CSV files are stored in the /data folder.
-- Open the Colab notebook /training.ipynb, upload the .csv files and execute the script to to train the model. The trained model will provide a .tflite file and a model.h file.
-- Upload the Arduino sketch /TinyML_Application.ino (including /model.h) to the board.
+- All CSV files are stored in the [data folder](https://github.com/ilkabret/LowPowerES/tree/main/data).
+- Open the [Colab notebook](https://github.com/ilkabret/LowPowerES/tree/main/training.ipynb), upload the .csv files and execute the script to to train the model. The trained model will provide a .tflite file and a model.h file.
+- Upload the Arduino sketch TinyML_Application.ino (including /model.h) from the [TinyML_Application folder](https://github.com/ilkabret/LowPowerES/tree/main/TinyML_Application) to the board.
 - Try some gestures and check the output on the Serial Monitor.
 
 ---
