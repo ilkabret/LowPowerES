@@ -100,7 +100,7 @@ During execution, the Arduino collects data, extracts the same 36 normalized fea
 ## ⚙️ Intructions
 
 - All CSV files are stored in the [data folder](https://github.com/ilkabret/LowPowerES/tree/main/data).
-- Open the [Colab notebook](https://github.com/ilkabret/LowPowerES/tree/main/training.ipynb), upload the .csv files and execute the script to to train the model. The trained model will provide a .tflite file and a model.h file.
+- Open the Colab notebook training.ipynb, upload the .csv files and execute the script to to train the model. The trained model will provide a .tflite file and a model.h file.
 - Upload the Arduino sketch TinyML_Application.ino (including /model.h) from the [TinyML_Application folder](https://github.com/ilkabret/LowPowerES/tree/main/TinyML_Application) to the board.
 - Try some gestures and check the output on the Serial Monitor.
 
