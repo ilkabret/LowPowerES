@@ -1,7 +1,7 @@
 /* -------- Assignment 1 --------
 Topic:  Gesture Recognition Application Using Feature Extraction
 Date:   15/03/2026
-Names:  Romain Mathis Noblet
+Names:  Romain Mathis Noblet (268709)
         Ilka Bretschneider (268664)
 */
 
@@ -168,7 +168,7 @@ void setup() {
   Serial.println("System ready - do your move!");
 
   // get the TFL representation of the model byte array
-  tflModel = tflite::GetModel(model);
+  tflModel = tflite::GetModel(_content_gesture_model_quant_tflite);
   if (tflModel->version() != TFLITE_SCHEMA_VERSION) {
     Serial.println("Model schema mismatch!");
     while (1);
@@ -264,6 +264,9 @@ void loop() {
         // print prediction message
         Serial.print("It is probably: ");
         Serial.println(GESTURES[bestIndex]);
+
+        Serial.println("Go again - do your move!");
+
       }
     }
   }
