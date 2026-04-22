@@ -1,13 +1,15 @@
-/**
- * KWS_Arduino.ino  —  Threshold-triggered keyword spotting
- *
- * Changes vs. original:
- *   • Continuous RMS monitoring in loop()
- *   • Inference fires only when RMS crosses TRIGGER_THRESHOLD
- *   • POST_TRIGGER_SAMPLES_MS of audio is captured *after* the trigger
- *     so the event is centred in the inference window
- *   • A mandatory REARM_MS cooldown prevents double-firing
- */
+/* -------- Assignment 1 --------
+Topic:  Threshold-triggered keyword spotting
+Date:   22/04/2026
+Names:  Romain Mathis Noblet (268709)
+        Ilka Bretschneider (268664)
+
+  • Continuous RMS monitoring in loop()
+  • Inference fires when RMS crosses TRIGGER_THRESHOLD
+  • POST_TRIGGER_SAMPLES_MS of audio is captured after the trigger
+    so the event is centred in the inference window
+  • A REARM_MS window prevents double-firing
+*/
 
 #include <PDM.h>
 #include <TensorFlowLite.h>
