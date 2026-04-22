@@ -18,6 +18,7 @@ Names:  Romain Mathis Noblet (268709)
 #include <tensorflow/lite/micro/micro_log.h>
 #include <tensorflow/lite/schema/schema_generated.h>
 #include <math.h>
+#include <arm_math.h>
 #include <avr/pgmspace.h>
 
 #include "mfcc_tables.h"
@@ -25,32 +26,36 @@ Names:  Romain Mathis Noblet (268709)
 #include "kws_params.h"
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  CONFIGURATION  (audio pipeline — do NOT change)
+//  CONFIGURATION 
 // ─────────────────────────────────────────────────────────────────────────────
-static constexpr int   SAMPLE_RATE      = 16000;
-static constexpr int   SAMPLES_PER_OBS  = 2000;
-static constexpr int   FRAME_LEN        = 256;
-static constexpr int   HOP_LEN          = 128;
-static constexpr int   FFT_SIZE         = 256;
+// ── Audio / dataset ────────────────────────────────────────────────────────
+static constexpr int   SAMPLE_RATE      = 16000;    // Hz
+static constexpr int   SAMPLES_PER_OBS  = 2000;     // int16 PCM values per recording
+static constexpr int   FRAME_LEN        = 256;      // samples per frame (256 int16 PCM)
+// ── CMSIS FFT ────────────────────────────────────────────────────────
+static arm_rfft_fast_instance_f32 fftInstance;
+// ── MFCC framing ────────────────────────────────────────────────────────
+static constexpr int   HOP_LEN          = 128;      // 50% overlap → hop = FRAME_LEN / 2
+static constexpr int   FFT_SIZE         = 256;      // RFFT size == FRAME_LEN
 static constexpr int   FFT_BINS         = FFT_SIZE / 2 + 1;
+// ── Mel filter bank ────────────────────────────────────────────────────────
 static constexpr int   N_MELS           = 26;
-static constexpr int   N_MFCC           = 13;
+// ── MFCC ────────────────────────────────────────────────────────────────────
+static constexpr int   N_MFCC           = 13;     // coefficients to keep (0 … 12)
+
 static constexpr int   N_FRAMES         = (SAMPLES_PER_OBS - FRAME_LEN) / HOP_LEN + 1;
 static constexpr float LOG_FLOOR        = 1e-10f;
 static constexpr int   TENSOR_ARENA_SIZE = 40 * 1024;
 static constexpr float CONFIDENCE_THRESHOLD = 0.60f;
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  TRIGGER CONFIGURATION  ← tune these three values for your environment
+//  TRIGGER CONFIGURATION 
 // ─────────────────────────────────────────────────────────────────────────────
 
 // RMS amplitude (0–32767) that fires the trigger.
-// Raise if background noise causes false triggers; lower if events are missed.
 static constexpr float    TRIGGER_THRESHOLD = 500.0f;
 
-// How many samples to collect AFTER the trigger before running inference.
-// 1000 samples = 62.5 ms @ 16 kHz — gives the tail of the sound time to arrive.
-// The pre-trigger audio already sitting in the ring buffer provides the head.
+// How many samples to collect after the trigger before running inference.
 static constexpr uint16_t POST_TRIGGER_SAMPLES = 1000;
 
 // Minimum ms between two inferences — prevents the same event firing twice.
@@ -128,71 +133,61 @@ static float computeRMS() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  FFT — Cooley-Tukey in-place radix-2 DIT  (unchanged)
-// ─────────────────────────────────────────────────────────────────────────────
-static void computeFFT(float* re, float* im, int n) {
-  for (int i = 1, j = 0; i < n; i++) {
-    int bit = n >> 1;
-    for (; j & bit; bit >>= 1) j ^= bit;
-    j ^= bit;
-    if (i < j) {
-      float tr = re[i]; re[i] = re[j]; re[j] = tr;
-      float ti = im[i]; im[i] = im[j]; im[j] = ti;
-    }
-  }
-  for (int len = 2; len <= n; len <<= 1) {
-    float ang = -2.0f * (float)M_PI / (float)len;
-    float wRe = cosf(ang), wIm = sinf(ang);
-    for (int i = 0; i < n; i += len) {
-      float curRe = 1.0f, curIm = 0.0f;
-      for (int j = 0; j < len / 2; j++) {
-        float uRe = re[i + j], uIm = im[i + j];
-        float vRe = re[i+j+len/2]*curRe - im[i+j+len/2]*curIm;
-        float vIm = re[i+j+len/2]*curIm + im[i+j+len/2]*curRe;
-        re[i+j]       = uRe+vRe; im[i+j]       = uIm+vIm;
-        re[i+j+len/2] = uRe-vRe; im[i+j+len/2] = uIm-vIm;
-        float newRe = curRe*wRe - curIm*wIm;
-        curIm = curRe*wIm + curIm*wRe;
-        curRe = newRe;
-      }
-    }
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  MFCC EXTRACTION  (unchanged)
+//  MFCC EXTRACTION  
 // ─────────────────────────────────────────────────────────────────────────────
 static void computeMFCC(const int16_t* pcm) {
+  float fftOut[FFT_SIZE];     
+  float powerSpec[FFT_BINS];   
   for (int frame = 0; frame < N_FRAMES; frame++) {
     int start = frame * HOP_LEN;
+    // ── Windowing ─────────────────────────────
     for (int i = 0; i < FRAME_LEN; i++) {
       frameBuf[i] = (float)pcm[start + i] / 32768.0f
                     * pgm_read_float(&KWS_HAMMING[i]);
     }
-    for (int i = 0; i < FFT_SIZE; i++) { fftRe[i] = frameBuf[i]; fftIm[i] = 0.0f; }
-    computeFFT(fftRe, fftIm, FFT_SIZE);
+    // ── FFT (CMSIS) ─────────────────────────────
+    arm_rfft_fast_f32(&fftInstance, frameBuf, fftOut, 0);
 
-    float powerSpec[FFT_BINS];
-    for (int k = 0; k < FFT_BINS; k++)
-      powerSpec[k] = (fftRe[k]*fftRe[k] + fftIm[k]*fftIm[k]) / (float)FFT_SIZE;
+    // ── Power spectrum ───────────────────────
+    powerSpec[0] = fftOut[0] * fftOut[0] / FFT_SIZE; // DC
 
+    powerSpec[FFT_BINS - 1] = fftOut[1] * fftOut[1] / FFT_SIZE; // Nyquist
+
+    for (int k = 1; k < FFT_BINS - 1; k++) {
+      float re = fftOut[2*k];
+      float im = fftOut[2*k + 1];
+      powerSpec[k] = (re * re + im * im) / FFT_SIZE;
+    }
+    // ── Mel filter bank ──────────────────────
     for (int m = 0; m < N_MELS; m++) {
       float energy = 0.0f;
-      for (int k = 0; k < FFT_BINS; k++)
-        energy += pgm_read_float(&KWS_MEL_FBANK[m*FFT_BINS+k]) * powerSpec[k];
+
+      for (int k = 0; k < FFT_BINS; k++) {
+        energy +=
+          pgm_read_float(&KWS_MEL_FBANK[m * FFT_BINS + k]) *
+          powerSpec[k];
+      }
+
       melBuf[m] = logf(energy + LOG_FLOOR);
     }
+
+    // ── DCT ──────────────────────────────────
     for (int c = 0; c < N_MFCC; c++) {
       float acc = 0.0f;
-      for (int m = 0; m < N_MELS; m++)
-        acc += pgm_read_float(&KWS_DCT[c*N_MELS+m]) * melBuf[m];
+
+      for (int m = 0; m < N_MELS; m++) {
+        acc +=
+          pgm_read_float(&KWS_DCT[c * N_MELS + m]) *
+          melBuf[m];
+      }
+
       mfccOut[frame][c] = acc;
     }
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  NORMALISE  (unchanged)
+//  NORMALISE  
 // ─────────────────────────────────────────────────────────────────────────────
 static void normaliseMFCC() {
   for (int f = 0; f < N_FRAMES; f++)
@@ -204,7 +199,7 @@ static void normaliseMFCC() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  SNAPSHOT  (unchanged)
+//  SNAPSHOT
 // ─────────────────────────────────────────────────────────────────────────────
 static int16_t pcmSnapshot[SAMPLES_PER_OBS];
 
@@ -257,7 +252,7 @@ static void runInference() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  SETUP  (unchanged except banner text)
+//  SETUP 
 // ─────────────────────────────────────────────────────────────────────────────
 void setup() {
   Serial.begin(115200);
@@ -299,6 +294,8 @@ void setup() {
     while (true) {}
   }
 
+  arm_rfft_fast_init_f32(&fftInstance, FFT_SIZE);
+
   Serial.print(F("TFLite model loaded. Arena used: "));
   Serial.print(interpreter->arena_used_bytes());
   Serial.println(F(" bytes"));
@@ -312,9 +309,6 @@ void setup() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  LOOP — threshold-triggered state machine
-//
-//  LISTENING  →  RMS crosses TRIGGER_THRESHOLD  →  COLLECTING
-//  COLLECTING →  POST_TRIGGER_SAMPLES received  →  inference  →  LISTENING
 // ─────────────────────────────────────────────────────────────────────────────
 void loop() {
   if (!bufferFull) return;
