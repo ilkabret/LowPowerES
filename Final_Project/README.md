@@ -265,7 +265,7 @@ Complementary references:
 - 🔧 **Ilka Bretschneider** — Embedded & measurement track (TFLite Micro integration, Arduino firmware, on-device profiling, hardware measurement, live demo).
 
 Course: *Low-Power Embedded System* — *Università Degli Studi Di Trento*, supervised by *Professor Kasim Sinan Yildirim*.
-*2026*
+<br>*2026*
 
 ## 📜 License
 
