@@ -2,7 +2,11 @@
 
 > ⚡ Compression-aware deployment and runtime adaptation of a CNN-based anomaly detector on the **Arduino Nano 33 BLE Sense Rev 2**.
 
-This project trains a compact CNN-based anomaly detector on the **MVTec AD** dataset, systematically compares three CNN compression techniques (post-training quantization, structured filter pruning, knowledge distillation), deploys the resulting variants on a Cortex-M4 microcontroller via **TensorFlow Lite for Microcontrollers**, and implements a runtime **energy-aware inference adaptation** mechanism that selects which compressed model to run based on the remaining energy budget.
+This project...
+... trains a compact CNN-based anomaly detector on the **MVTec AD** dataset,
+... systematically compares three CNN compression techniques (post-training quantization, structured filter pruning, knowledge distillation),
+... deploys the resulting variants on a Cortex-M4 microcontroller via **TensorFlow Lite for Microcontrollers**,
+... and implements a runtime **energy-aware inference adaptation** mechanism that selects which compressed model to run based on the remaining energy budget.
 
 The end product is a joint accuracy / memory / latency / energy **Pareto characterization** of compression techniques for visual anomaly detection on real MCU hardware, plus a battery-powered demo of adaptive inference.
 
@@ -33,7 +37,8 @@ Visual anomaly detection is a core component of industrial quality control and e
 - 🧠 The model must fit a tight memory and compute budget (here: 256 KB SRAM, 1 MB Flash, Cortex-M4F @ 64 MHz).
 - 🔋 The energy supply is finite and sometimes variable (battery, harvested energy), which calls for inference strategies that gracefully degrade as energy depletes.
 
-Most published compression studies target supervised classification. Anomaly detection has different loss functions, output structures, and failure modes — so how far compression can be pushed before detection AUROC collapses is an open question. This project provides a systematic, hardware-grounded answer for one representative setting.
+Anomaly detection has different loss functions, output structures, and failure modes — so how far compression can be pushed before detection AUROC collapses is an open question. 
+This project provides a systematic, hardware-grounded approach for one representative setting to this question.
 
 ## 📂 Project structure
 
@@ -73,20 +78,19 @@ Most published compression studies target supervised classification. Anomaly det
                 ┌──────────────────────┐
                 │   MVTec AD dataset   │
                 └──────────┬───────────┘
-                           │  (2–3 categories)
+                           │  (3 categories: bottle, hazelnut, metal nut)
                            ▼
                 ┌──────────────────────┐
                 │  Train FP32 baseline │
-                │  (compact CNN AE /   │
-                │   PaDiM-style)       │
+                │  (compact CNN AE)    │
                 └──────────┬───────────┘
                            │
               ┌────────────┼────────────┐
               ▼            ▼            ▼
         ┌─────────┐  ┌─────────┐  ┌─────────────┐
-        │  PTQ    │  │ Pruning │  │ Distillation │
-        │  INT8   │  │ (L1,    │  │ (small       │
-        │         │  │  Taylor)│  │  student)    │
+        │  PTQ    │  │ Pruning │  │ Distillation│
+        │  INT8   │  │ (L1,    │  │ (small      │
+        │         │  │  Taylor)│  │  student)   │
         └────┬────┘  └────┬────┘  └──────┬──────┘
              └────────────┼──────────────┘
                           ▼
