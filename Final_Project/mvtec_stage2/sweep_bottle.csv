@@ -1,0 +1,13 @@
+name,technique,auroc,n_params,macs_M,deployed_kb
+INT8 (sim),quantization,0.9333,462307,156.6,451.5
+Baseline FP32,none,0.9294,462307,156.6,1805.9
+Prune 30% (taylor),pruning_taylor,0.9222,255901,81.2,999.6
+Prune 30% (taylor) + INT8,pruning_taylor+int8,0.9214,255901,81.2,249.9
+Prune 30% (l1) + INT8,pruning_l1+int8,0.9151,255901,81.2,249.9
+Prune 30% (l1),pruning_l1,0.9135,255901,81.2,999.6
+Prune 50% (l1) + INT8,pruning_l1+int8,0.9079,149251,44.8,145.8
+Prune 50% (l1),pruning_l1,0.904,149251,44.8,583.0
+Prune 50% (taylor),pruning_taylor,0.8937,149251,44.8,583.0
+Prune 50% (taylor) + INT8,pruning_taylor+int8,0.8913,149251,44.8,145.8
+Distill (b16),distillation,0.827,116467,42.7,454.9
+Distill (b16) + INT8,distillation+int8,0.8151,116467,42.7,113.7
