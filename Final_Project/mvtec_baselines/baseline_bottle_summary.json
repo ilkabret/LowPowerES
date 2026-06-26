@@ -1,0 +1,20 @@
+{
+  "category": "bottle",
+  "image_size": 128,
+  "architecture": "CompactAE",
+  "base_channels": 32,
+  "latent_channels": 32,
+  "n_down": 3,
+  "scoring": {
+    "mode": "mean",
+    "border": 8,
+    "blur_kernel": 5
+  },
+  "auroc": 0.9293650793650794,
+  "n_params": 462307,
+  "macs_M": 156.6208,
+  "fp32_kb": 1805.88671875,
+  "int8_kb_est": 451.4716796875,
+  "epochs": 200,
+  "final_train_loss": 0.06632348770896594
+}
