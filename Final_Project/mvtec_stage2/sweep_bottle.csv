@@ -1,13 +1,13 @@
 name,technique,auroc,n_params,macs_M,deployed_kb
-Prune 30% (l1) + INT8,pruning_l1+int8,0.9667,255901,20.3,249.9
-Baseline FP32,none,0.9651,462307,39.2,1805.9
-Prune 30% (l1),pruning_l1,0.9651,255901,20.3,999.6
-INT8 (sim),quantization,0.9643,462307,39.2,451.5
-Prune 30% (taylor),pruning_taylor,0.9619,255901,20.3,999.6
-Prune 30% (taylor) + INT8,pruning_taylor+int8,0.9603,255901,20.3,249.9
-Prune 50% (l1) + INT8,pruning_l1+int8,0.9556,149251,11.2,145.8
-Prune 50% (l1),pruning_l1,0.9556,149251,11.2,583.0
-Prune 50% (taylor),pruning_taylor,0.9429,149251,11.2,583.0
-Prune 50% (taylor) + INT8,pruning_taylor+int8,0.9413,149251,11.2,145.8
-Distill (b16),distillation,0.9167,116467,10.7,454.9
-Distill (b16) + INT8,distillation+int8,0.9167,116467,10.7,113.7
+INT8 (sim),quantization,0.9738,361283,63.9,352.8
+Baseline FP32,none,0.9667,361283,63.9,1411.3
+Prune 30% (l1),pruning_l1,0.9659,199999,33.1,781.2
+Prune 30% (l1) + INT8,pruning_l1+int8,0.9595,199999,33.1,195.3
+Prune 50% (l1),pruning_l1,0.9556,116659,18.3,455.7
+Prune 50% (l1) + INT8,pruning_l1+int8,0.9556,116659,18.3,113.9
+Prune 30% (taylor),pruning_taylor,0.9532,199999,33.1,781.2
+Prune 50% (taylor) + INT8,pruning_taylor+int8,0.9476,116659,18.3,113.9
+Prune 30% (taylor) + INT8,pruning_taylor+int8,0.9437,199999,33.1,195.3
+Prune 50% (taylor),pruning_taylor,0.9333,116659,18.3,455.7
+Distill (b16),distillation,0.931,91043,17.5,355.6
+Distill (b16) + INT8,distillation+int8,0.9238,91043,17.5,88.9
