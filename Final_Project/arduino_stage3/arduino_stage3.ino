@@ -3,7 +3,7 @@
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 
-#include "bottle_Prune_50pct_l1.h"   // the model C array
+#include "bottle_Prune_50pct_l1_test.h"   // the model C array
 #include "test_img_good.h"          // stored test image (INT8)
 #include "test_img_defect.h"
 
@@ -56,27 +56,35 @@ void setup() {
   Serial.println(interpreter->arena_used_bytes());
   Serial.print("Input bytes: ");  Serial.println(input->bytes);
   Serial.print("Output bytes: "); Serial.println(output->bytes);
+  Serial.print("Model len: ");
+  Serial.println(bottle_Prune_50pct_l1_len);
 }
 
 void run_one(const signed char* img, int img_len, const char* label) {
-  // copy stored image into the input tensor
-  for (int i = 0; i < img_len; i++) input->data.int8[i] = img[i];
+  // save a copy of the input separately
+  static signed char input_copy[12288];
+  for (int i = 0; i < img_len; i++) {
+    input->data.int8[i] = img[i];
+    input_copy[i] = img[i];        // independent copy
+  }
 
-  unsigned long t0 = micros();
+  unsigned long t0 = millis();
   interpreter->Invoke();
-  unsigned long t1 = micros();
+  unsigned long t1 = millis();
 
+  // compute error against the saved input copy, not the live tensor
   float score = reconstruction_error(
-      input->data.int8, output->data.int8,
+      input_copy, output->data.int8,
       input->params.scale, input->params.zero_point,
       output->params.scale, output->params.zero_point, img_len);
 
-  Serial.print(label); Serial.print("  score="); Serial.print(score, 6);
-  Serial.print("  latency_us="); Serial.println(t1 - t0);
+  Serial.print(label); Serial.print(" score="); Serial.print(score, 6);
+  Serial.print(" latency_ms="); Serial.println(t1 - t0);
 }
 
 void loop() {
   run_one(test_img_good,   test_img_good_len,   "GOOD  ");
   run_one(test_img_defect, test_img_defect_len, "DEFECT");
+  
   delay(1000);
 }
