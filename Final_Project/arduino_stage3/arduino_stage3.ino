@@ -78,5 +78,5 @@ void run_one(const signed char* img, int img_len, const char* label) {
 void loop() {
   run_one(test_img_good,   test_img_good_len,   "GOOD  ");
   run_one(test_img_defect, test_img_defect_len, "DEFECT");
-  delay(2000);
+  delay(1000);
 }
