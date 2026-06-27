@@ -3,12 +3,12 @@
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 
-#include "bottle_Distill_b16.h"   // the model C array
+#include "bottle_Prune_50pct_l1.h"   // the model C array
 #include "test_img_good.h"          // stored test image (INT8)
 #include "test_img_defect.h"
 
 // Tensor arena — holds model activations. Tune down after first run.
-constexpr int kTensorArenaSize = 200 * 1024;  // near the 256 KB ceiling
+constexpr int kTensorArenaSize = 180 * 1024;  // near the 256 KB ceiling
 alignas(16) uint8_t tensor_arena[kTensorArenaSize];
 
 const tflite::Model* model = nullptr;
@@ -35,7 +35,7 @@ void setup() {
   Serial.begin(115200);
   while (!Serial);
 
-  model = tflite::GetModel(bottle_Distill_b16);
+  model = tflite::GetModel(bottle_Prune_50pct_l1);
   if (model->version() != TFLITE_SCHEMA_VERSION) {
     Serial.println("Model schema mismatch!"); while (1);
   }

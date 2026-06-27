@@ -1,6 +1,6 @@
 {
   "category": "hazelnut",
-  "image_size": 128,
+  "image_size": 64,
   "architecture": "CompactAE",
   "base_channels": 32,
   "latent_channels": 32,
@@ -10,11 +10,11 @@
     "border": 8,
     "blur_kernel": 5
   },
-  "auroc": 0.815,
+  "auroc": 0.8732142857142857,
   "n_params": 462307,
-  "macs_M": 156.6208,
+  "macs_M": 39.1552,
   "fp32_kb": 1805.88671875,
   "int8_kb_est": 451.4716796875,
   "epochs": 200,
-  "final_train_loss": 0.05478544688473145
+  "final_train_loss": 0.06169010450442632
 }
