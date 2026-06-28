@@ -1,7 +1,7 @@
 category,name,tflite_kb,auroc_litert,auroc_stage2,macs
-bottle,model_bottle_Prune_30pct_l1,265.8,0.9659,0.9651,20294400
-bottle,model_bottle_Prune_50pct_l1,160.3,0.9563,0.9556,11195904
-bottle,model_bottle_Distill_b16,128.1,0.9167,0.9167,10670848
-hazelnut,model_hazelnut_Prune_50pct_l1,160.3,0.89,0.8879,11195904
-hazelnut,model_hazelnut_Prune_30pct_l1,265.8,0.8711,0.8707,20294400
-hazelnut,model_hazelnut_Distill_b16,128.1,0.8021,0.7996,10670848
+bottle,model_bottle_Prune_30pct_l1,216.8,0.9635,0.9659,33143040
+bottle,model_bottle_Prune_50pct_l1,133.0,0.9492,0.9556,18310656
+bottle,model_bottle_Distill_b16,107.6,0.9294,0.931,17455872
+hazelnut,model_hazelnut_Prune_30pct_l1,216.8,0.8936,0.8904,33143040
+hazelnut,model_hazelnut_Prune_50pct_l1,133.0,0.8854,0.8821,18310656
+hazelnut,model_hazelnut_Distill_b16,107.6,0.83,0.8218,17455872
