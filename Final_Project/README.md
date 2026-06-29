@@ -12,22 +12,6 @@ The final goal is a **hardware-grounded Pareto analysis** of accuracy, latency, 
 
 ---
 
-## 📑 Table of contents
-
-1. Motivation  
-2. Project structure  
-3. Pipeline overview  
-4. Hardware  
-5. Notebooks (Colab workflow)  
-6. On-device inference artifacts  
-7. Results  
-8. Adaptive inference (Stage 4)  
-9. References  
-10. Authors  
-11. License  
-
----
-
 ## 🎯 Motivation
 
 Deploying visual anomaly detection on microcontrollers introduces two core constraints:
@@ -165,19 +149,6 @@ Key finding:
 > A strong static model (especially `prune50 L1`) often matches or outperforms adaptive strategies in overall utility, since it already provides a robust accuracy–energy trade-off under the defined constraints.
 
 Adaptive inference is therefore not universally superior, but helps illustrate system-level trade-offs under variable energy conditions.
-
----
-
-## 📚 References
-
-- Bergmann et al., *MVTec AD dataset*, CVPR 2019  
-- Jacob et al., *Quantization and Training of Neural Networks*, CVPR 2018  
-- Molchanov et al., *Importance Estimation for Pruning*, CVPR 2019  
-- Hinton et al., *Knowledge Distillation*, 2014  
-- Batzner et al., *EfficientAD*, WACV 2024  
-- David et al., *TensorFlow Lite Micro*, MLSys 2021  
-
----
 
 ## 👥 Authors
 
