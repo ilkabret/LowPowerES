@@ -116,7 +116,7 @@ All experiments are implemented as Jupyter notebooks:
 
 ## 📟 On-device inference artifacts (Stage 3/4)
 
-Located in: Ondevice_Inference/
+Located in: `Ondevice_Inference/`
 
 
 ### Arduino inference modes
