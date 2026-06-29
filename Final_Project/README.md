@@ -124,7 +124,7 @@ Located in: `Ondevice_Inference/`
 - `arduino_stage3_OneModelInference/`
   - Single-model inference demo
   - Uses:
-    - `model_bottle_prune50.h`
+    - `bottle_Prune_50pct_l1.h`
     - `test_img_good.h`
     - `test_img_defect.h`
   - Measures:
