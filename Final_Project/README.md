@@ -28,7 +28,7 @@ This project investigates how far a convolutional autoencoder can be compressed 
 .
 ├── literature/ # Papers and references
 ├── mvtec_stage1/ # Stage 1 data/experiments (baseline training)
-├── mvtec_stage2/ # Compression experiments (pruning, PTQ, distillation)
+├── mvtec_stage2/ # Compression experiments (pruning, distillation, quantization)
 ├── mvtec_stage3/ # TFLite conversion + deployment experiments
 ├── Ondevice_Inference/ # Arduino + test sets + logs (Stage 3/4)
 │ ├── arduino_stage3_OneModelInference/
@@ -39,7 +39,7 @@ This project investigates how far a convolutional autoencoder can be compressed 
 │ └── ondevice_results.csv
 │
 ├── Stage1_Baseline.ipynb # Baseline autoencoder training (Colab)
-├── Stage2_Compression.ipynb # Pruning / quantization / distillation
+├── Stage2_Compression.ipynb # Pruning / distillation / quantization
 ├── Stage3_Deployment.ipynb # TFLite + Arduino deployment + measurement
 ├── Stage4_EnergyAdaptive.ipynb # Energy-aware adaptive inference
 ├── README.md
@@ -56,9 +56,9 @@ MVTec AD dataset
 Stage 1 — Baseline autoencoder (Colab)
 ↓
 Stage 2 — Compression study
-├── INT8 quantization
 ├── L1 / Taylor pruning
-└── Knowledge distillation
+├── Knowledge distillation
+└── INT8 quantization
 ↓
 Stage 3 — MCU deployment (Arduino Nano 33 BLE Sense)
 ├── TFLite Micro inference
@@ -90,7 +90,7 @@ Stage 4 — Energy-aware adaptive inference
 All experiments are implemented as Jupyter notebooks:
 
 - `Stage1_Baseline.ipynb` → train convolutional autoencoder on MVTec AD  
-- `Stage2_Compression.ipynb` → PTQ, pruning (L1 & Taylor), distillation + Pareto analysis  
+- `Stage2_Compression.ipynb` → pruning (L1 & Taylor), distillation, INT8 quantization + Pareto analysis  
 - `Stage3_Deployment.ipynb` → TFLite conversion, Arduino deployment, on-device metrics  
 - `Stage4_EnergyAdaptive.ipynb` → energy-aware inference simulation and evaluation  
 
