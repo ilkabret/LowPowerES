@@ -136,7 +136,7 @@ Across Stage 2–3, models are evaluated using:
 - latency (ms / inference)
 - estimated energy (mJ / inference)
 
-These metrics are combined into Pareto plots to identify optimal compression–accuracy trade-offs.
+❌ These metrics are combined into Pareto plots to identify optimal compression–accuracy trade-offs.
 
 ---
 
