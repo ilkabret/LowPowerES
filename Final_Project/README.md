@@ -40,6 +40,7 @@ This project investigates how far a convolutional autoencoder can be compressed 
 ---
 
 ## 📂 Project structure
+```
 .
 ├── literature/ # Papers and references
 ├── mvtec_stage1/ # Stage 1 data/experiments (baseline training)
@@ -59,12 +60,13 @@ This project investigates how far a convolutional autoencoder can be compressed 
 ├── Stage4_EnergyAdaptive.ipynb # Energy-aware adaptive inference
 ├── README.md
 └── TensorFlowLiteLibrary.url
-
+```
 
 ---
 
 ## 🔄 Pipeline overview
 
+```
 MVTec AD dataset
 ↓
 Stage 1 — Baseline autoencoder (Colab)
@@ -83,6 +85,7 @@ Stage 4 — Energy-aware adaptive inference
 ├── battery / harvesting simulation
 ├── runtime model switching
 └── system-level utility evaluation
+```
 
 ---
 
@@ -159,7 +162,7 @@ Stage 4 evaluates runtime policies that select between compressed models dependi
 
 Key finding:
 
-> A strong static model (especially `prune50`) often matches or outperforms adaptive strategies in overall utility, since it already provides a robust accuracy–energy trade-off under the defined constraints.
+> A strong static model (especially `prune50 L1`) often matches or outperforms adaptive strategies in overall utility, since it already provides a robust accuracy–energy trade-off under the defined constraints.
 
 Adaptive inference is therefore not universally superior, but helps illustrate system-level trade-offs under variable energy conditions.
 
@@ -178,15 +181,7 @@ Adaptive inference is therefore not universally superior, but helps illustrate s
 
 ## 👥 Authors
 
-- **Romain Noblet** — ML, compression, adaptive inference  
-- **Ilka Bretschneider** — embedded systems, Arduino deployment, measurement pipeline  
+**Romain Noblet** & **Ilka Bretschneider**
 
 Course: *Low-Power Embedded Systems* — University of Trento  
 2026  
-
----
-
-## 📜 License
-
-MIT License (code).  
-MVTec AD dataset is subject to its own license.
