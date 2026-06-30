@@ -4,9 +4,9 @@ from sklearn.metrics import roc_auc_score
 
 # ============ CONFIG — edit these per model you flash ============
 PORT       = 'COM3'
-CATEGORY   = 'hazelnut'                  # 'bottle' or 'hazelnut'
-MODEL_NAME = 'hazelnut_Distill_b16'          # label for the CSV row
-NPZ_FILE   = r"C:\Users\ilkab\Studium\LowPowerES\Final_Project\hazelnut_testset_int8.npz" # test set for this category
+CATEGORY   = 'bottle'                  # 'bottle' or 'hazelnut'
+MODEL_NAME = 'bottle_Distill_b16'          # label for the CSV row
+NPZ_FILE   = r"C:\Users\ilkab\Studium\LowPowerES\Final_Project\Ondevice_Inference\bottle_testset_int8.npz" # test set for this category
 CSV_OUT    = 'ondevice_results.csv'
 
 # ============ ENERGY MODEL (datasheet) ============

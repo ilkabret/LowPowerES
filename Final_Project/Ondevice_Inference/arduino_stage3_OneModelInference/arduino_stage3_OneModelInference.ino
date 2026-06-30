@@ -3,7 +3,7 @@
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 
-#include "hazelnut_Prune_50pct_l1.h"   // the model C array
+#include "bottle_Distill_b16.h"   // the model C array
 #include "test_img_good.h"          // stored test image (INT8)
 #include "test_img_defect.h"
 
@@ -35,7 +35,7 @@ void setup() {
   Serial.begin(115200);
   while (!Serial);
 
-  model = tflite::GetModel(hazelnut_Prune_50pct_l1);
+  model = tflite::GetModel(bottle_Distill_b16);
   if (model->version() != TFLITE_SCHEMA_VERSION) {
     Serial.println("Model schema mismatch!"); while (1);
   }
@@ -57,7 +57,7 @@ void setup() {
   Serial.print("Input bytes: ");  Serial.println(input->bytes);
   Serial.print("Output bytes: "); Serial.println(output->bytes);
   Serial.print("Model len: ");
-  Serial.println(hazelnut_Prune_50pct_l1_len);
+  Serial.println(bottle_Distill_b16_len);
 }
 
 void run_one(const signed char* img, int img_len, const char* label) {
