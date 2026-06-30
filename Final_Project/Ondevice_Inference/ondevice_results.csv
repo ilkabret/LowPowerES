@@ -1,6 +1,6 @@
-model,category,auroc_ondevice,latency_ms,latency_std,SRAM (arena),model size,power_mW,energy_mJ,current_mA,supply_V
+model,category,auroc_ondevice,latency_ms,latency_std,SRAM_arena,model_size,power_mW,energy_mJ,current_mA,supply_V
 bottle_Prune_50pct_l1,bottle,0.946,2059.3,0.8,86212,136208,20.79,42.8,6.3,3.3
-bottle_Prune_30pct_l1,bottle,0.9603,3354.8,1.0,1177664,221984,20.79,69.7,6.3,3.3
+bottle_Prune_30pct_l1,bottle,0.9603,3354.8,1.0,117764,221984,20.79,69.7,6.3,3.3
 bottle_Distill_b16,bottle,0.9373,1992.0,0.7,86084,110160,20.79,41.4,6.3,3.3
 hazelnut_Prune_50pct_l1,hazelnut,0.8839,2059.9,0.8,86212,136298,20.79,42.8,6.3,3.3
 hazelnut_Prune_30pct_l1,hazelnut,0.89,3356.0,1.0,117764,221984,20.79,69.8,6.3,3.3
