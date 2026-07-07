@@ -42,7 +42,8 @@ This project investigates how far a convolutional autoencoder can be compressed 
 ├── Stage3_Deployment.ipynb # TFLite + Arduino deployment
 ├── Stage4_EnergyAdaptive.ipynb # Simulation of energy-aware adaptive inference
 ├── README.md
-└── TensorFlowLiteLibrary.url
+├── TensorFlowLiteLibrary.url
+└── TinyML_for_Anomaly_Detection.pdf # The report
 ```
 
 ---
@@ -146,7 +147,7 @@ Adaptive inference is therefore not universally superior, but helps illustrate s
 
 ## 👥 Authors
 
-**Romain Noblet** & **Ilka Bretschneider**
+**Ilka Bretschneider** & **Romain Noblet**
 
 Course: *Low-Power Embedded Systems* — University of Trento  
 2026  
