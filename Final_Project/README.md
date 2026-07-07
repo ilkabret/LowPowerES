@@ -28,6 +28,7 @@ This project investigates how far a convolutional autoencoder can be compressed 
 ├── mvtec_stage1/ # baseline models
 ├── mvtec_stage2/ # Compression models (pruning, distillation, quantization)
 ├── mvtec_stage3/ # TFLite models and header files
+├── mvtec_stage4/ # Figures
 ├── Ondevice_Inference/ # Arduino + test sets + logs (Stage 3/4)
 │ ├── arduino_stage3_OneModelInference/
 │ ├── arduino_stage3_StreamTestSet/
@@ -36,7 +37,7 @@ This project investigates how far a convolutional autoencoder can be compressed 
 │ ├── streamTestSet.py
 │ └── ondevice_results.csv
 │
-|   Colag Notebooks:
+|   Colab Notebooks:
 ├── Stage1_Baseline.ipynb # Baseline autoencoder training
 ├── Stage2_Compression.ipynb # Pruning / distillation / quantization
 ├── Stage3_Deployment.ipynb # TFLite + Arduino deployment
