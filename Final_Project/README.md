@@ -8,8 +8,6 @@ This project:
 - deploys INT8 models on a Cortex-M4 microcontroller via **TensorFlow Lite for Microcontrollers**,
 - and studies **energy-aware inference strategies** under simulated limited or variable power budgets.
 
-❌ The final goal is a **hardware-grounded Pareto analysis** of accuracy, latency, memory, and energy, plus an adaptive inference policy that selects models based on energy availability.
-
 ---
 
 ## 🎯 Motivation
